@@ -133,20 +133,14 @@
     elements: [],
     percentage: true,
     userTiming: true,
-    pixelDepth: true,
-    nonInteraction: true,
-    gaGlobal: false,
-    gtmOverride: false
+    pixelDepth: true
   };
 
   var options = extend({}, defaults),
     cache = [],
     scrollEventBound = false,
     lastPixelDepth = 0,
-    universalGA,
-    classicGA,
-    gaGlobal,
-    standardEventHandler,
+    // standardEventHandler,
     scrollEventHandler;
 
   /*
@@ -179,89 +173,14 @@
       return;
     }
 
-    /*
-     * Determine which version of GA is being used
-     * "ga", "__gaTracker", _gaq", and "dataLayer" are the possible globals
-     */
-
-    if (options.gaGlobal) {
-      universalGA = true;
-      gaGlobal = options.gaGlobal;
-    } else if (typeof ga === "function") {
-      universalGA = true;
-      gaGlobal = 'ga';
-    } else if (typeof __gaTracker === "function") {
-      universalGA = true;
-      gaGlobal = '__gaTracker';
-    }
-
-    if (typeof _gaq !== "undefined" && typeof _gaq.push === "function") {
-      classicGA = true;
-    }
-
-    if (typeof options.eventHandler === "function") {
-      standardEventHandler = options.eventHandler;
-    } else if (typeof dataLayer !== "undefined" && typeof dataLayer.push === "function" && !options.gtmOverride) {
-
-      standardEventHandler = function(data) {
-        dataLayer.push(data);
-      };
-    }
+    // TODO: Might not need this block at all.
+    // if (typeof options.eventHandler === "function") {
+    //   standardEventHandler = options.eventHandler;
+    // }
 
     /*
      * Functions
      */
-
-    function sendEvent(action, label, scrollDistance, timing) {
-
-      if (standardEventHandler) {
-
-        standardEventHandler({'event': 'ScrollDistance', 'eventCategory': 'Scroll Depth', 'eventAction': action, 'eventLabel': label, 'eventValue': 1, 'eventNonInteraction': options.nonInteraction});
-
-        if (options.pixelDepth && arguments.length > 2 && scrollDistance > lastPixelDepth) {
-          lastPixelDepth = scrollDistance;
-          standardEventHandler({'event': 'ScrollDistance', 'eventCategory': 'Scroll Depth', 'eventAction': 'Pixel Depth', 'eventLabel': rounded(scrollDistance), 'eventValue': 1, 'eventNonInteraction': options.nonInteraction});
-        }
-
-        if (options.userTiming && arguments.length > 3) {
-          standardEventHandler({'event': 'ScrollTiming', 'eventCategory': 'Scroll Depth', 'eventAction': action, 'eventLabel': label, 'eventTiming': timing});
-        }
-
-      } else {
-
-        if (universalGA) {
-
-          window[gaGlobal]('send', 'event', 'Scroll Depth', action, label, 1, {'nonInteraction': options.nonInteraction});
-
-          if (options.pixelDepth && arguments.length > 2 && scrollDistance > lastPixelDepth) {
-            lastPixelDepth = scrollDistance;
-            window[gaGlobal]('send', 'event', 'Scroll Depth', 'Pixel Depth', rounded(scrollDistance), 1, {'nonInteraction': options.nonInteraction});
-          }
-
-          if (options.userTiming && arguments.length > 3) {
-            window[gaGlobal]('send', 'timing', 'Scroll Depth', action, timing, label);
-          }
-
-        }
-
-        if (classicGA) {
-
-          _gaq.push(['_trackEvent', 'Scroll Depth', action, label, 1, options.nonInteraction]);
-
-          if (options.pixelDepth && arguments.length > 2 && scrollDistance > lastPixelDepth) {
-            lastPixelDepth = scrollDistance;
-            _gaq.push(['_trackEvent', 'Scroll Depth', 'Pixel Depth', rounded(scrollDistance), 1, options.nonInteraction]);
-          }
-
-          if (options.userTiming && arguments.length > 3) {
-            _gaq.push(['_trackTiming', 'Scroll Depth', action, timing, label, 100]);
-          }
-
-        }
-
-      }
-
-    }
 
     function calculateMarks(docHeight) {
       return {
@@ -273,20 +192,19 @@
       };
     }
 
-    function checkMarks(marks, scrollDistance, timing) {
+    function checkMarks(marks, scrollDistance) {
       // Check each active mark
       for ( var key in marks ) {
         if ( !marks.hasOwnProperty(key) )
           continue;
         var val = marks[key];
         if ( !inArray(cache, key) && scrollDistance >= val ) {
-          sendEvent('Percentage', key, scrollDistance, timing);
           cache.push(key);
         }
       }
     }
 
-    function checkElements(elements, scrollDistance, timing) {
+    function checkElements(elements, scrollDistance) {
       for ( var i=0; i<elements.length; i++) {
         var elem = elements[i];
         if ( !inArray(cache, elem) ) {
@@ -294,17 +212,11 @@
           if ( elemNode ) {
             var elemYOffset = getElementYOffsetToDocumentTop(elemNode);
             if ( scrollDistance >= elemYOffset ) {
-              sendEvent('Elements', elem, scrollDistance, timing);
               cache.push(elem);
             }
           }
         }
-      };
-    }
-
-    function rounded(scrollDistance) {
-      // Returns String
-      return (Math.floor(scrollDistance/250) * 250).toString();
+      }
     }
 
     /*
@@ -439,7 +351,7 @@
    * Globals
    */
 
-  window.gascrolldepth = {
+  window.scrolldepth = {
     init: init,
     reset: reset,
     addElements: addElements,
