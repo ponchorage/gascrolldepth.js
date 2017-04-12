@@ -1,7 +1,7 @@
 /*!
  * @preserve
- * gascrolldepth.js | v0.9
- * Copyright (c) 2015 Rob Flaherty (@robflaherty), Leigh McCulloch (@___leigh___)
+ * scrolldepth.js | v0.9
+ * Copyright (c) 2015 Rob Flaherty (@robflaherty), Leigh McCulloch (@___leigh___), Jeremy Hicks (@ponchorage)
  * Licensed under the MIT and GPL licenses.
  */
 ;(function ( window, document, undefined ) {
@@ -132,7 +132,6 @@
     minHeight: 0,
     elements: [],
     percentage: true,
-    userTiming: true,
     pixelDepth: true
   };
 

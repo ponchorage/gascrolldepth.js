@@ -1,20 +1,19 @@
 {
-  "name": "gascrolldepth",
-  "main": "gascrolldepth.js",
+  "name": "scrolldepth",
+  "main": "scrolldepth.js",
   "version": "0.9.0",
-  "homepage": "https://github.com/leighmcculloch/gascrolldepth.js",
-  "repository": { "type": "git", "url": "git://github.com/leighmcculloch/gascrolldepth.js.git" },
-  "author": { "name" : "Leigh McCulloch" , "url" : "https://leighmcculloch.com" },
+  "homepage": "https://github.com/ponchorage/scrolldepth.",
+  "repository": { "type": "git", "url": "git://github.com/ponchorage/scrolldepth.git" },
+  "author": { "name" : "Jeremy Hicks" },
   "contributors": [
     { "name" : "Rob Flaherty" },
-    { "name" : "Leigh McCulloch", "url" : "https://leighmcculloch.com" }
+    { "name" : "Leigh McCulloch", "url" : "https://leighmcculloch.com" },
+    { "name": "Jeremy Hicks" }
   ],
-  "description": "A Google Analytics plugin for measuring page scrolling.",
+  "description": "A plugin for measuring page scrolling.",
   "keywords": [
-    "analytics",
-    "google analytics",
     "tracking"
   ],
   "license": "MIT",
-  "bugs": { "url": "https://github.com/leighmcculloch/gascrolldepth.js/issues" }
+  "bugs": { "url": "https://github.com/ponchorage/scrolldepth/issues" }
 }

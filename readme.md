@@ -1,21 +1,21 @@
 # Scroll Depth
-Scroll Depth is a Google Analytics plugin that tracks how far users are scrolling. The plugin provides native support for Universal Analytics, Classic Google Analytics, and Google Tag Manager. It can also be used with any analytics service that supports events.
+Scroll Depth is a plugin that tracks how far users are scrolling. It can also be used with any service that supports events.
 
-This fork is maintained in parallel with Robert Flaherty's `jquery-scrolldepth` project, removing the dependence on jQuery.
+This fork is maintained in parallel with Robert Flaherty's `jquery-scrolldepth` project and Leigh McCulloch's corresponding fork that removes the dependency on jQuery. This fork removes the GA dependency giving you a simple scroll depth option.
 
 ## Install
 ```
-bower install gascrolldepth
+npm install ponchorage/scrolldepth
 ```
 
 ## Usage
 ```javascript
-gascrolldepth.init();
+scrolldepth.init();
 ```
 
 or with jQuery:
 ```javascript
-$.gascrolldepth();
+$.scrolldepth();
 ```
 
 ## Browser Compatibility
@@ -44,10 +44,10 @@ To expand browser compatibility to all effective browsers (IE 6+, Chrome 1+, Saf
 * or, specify `elements` as an array of `DOMElement` objects rather than string selectors.
 
 ## Contributing
-Bug reports and code contributions are welcome. Please see [contributing.md](https://github.com/robflaherty/jquery-scrolldepth/blob/master/contributing.md).
+Bug reports and code contributions are welcome. Please see [contributing.md](https://github.com/ponchorage/scrolldepth/blob/master/contributing.md).
 
 ## Testing
-There's a test HTML file that mocks the Google Analytics functions and writes the GA Event data to the console.
+There's a test HTML file that writes event data to the console.
 
 ## License
 Licensed under the MIT and GPL licenses.
