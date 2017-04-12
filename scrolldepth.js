@@ -132,6 +132,7 @@
     minHeight: 0,
     elements: [],
     percentage: true,
+    userTiming: true,
     pixelDepth: true
   };
 
@@ -139,7 +140,7 @@
     cache = [],
     scrollEventBound = false,
     lastPixelDepth = 0,
-    // standardEventHandler,
+    standardEventHandler,
     scrollEventHandler;
 
   /*
@@ -172,14 +173,29 @@
       return;
     }
 
-    // TODO: Might not need this block at all.
-    // if (typeof options.eventHandler === "function") {
-    //   standardEventHandler = options.eventHandler;
-    // }
+    if (typeof options.eventHandler === "function") {
+      standardEventHandler = options.eventHandler;
+    }
 
     /*
      * Functions
      */
+
+    function sendEvent(action, label, scrollDistance, timing) {
+
+      if (standardEventHandler) {
+        standardEventHandler({'event': 'ScrollDistance', 'category': 'Scroll Depth', 'action': action, 'label': label, 'value': 1});
+
+        if (options.pixelDepth && arguments.length > 2 && scrollDistance > lastPixelDepth) {
+          lastPixelDepth = scrollDistance;
+          standardEventHandler({'event': 'ScrollDistance', 'category': 'Scroll Depth', 'action': 'Pixel Depth', 'label': rounded(scrollDistance), 'value': 1});
+        }
+
+        if (options.userTiming && arguments.length > 3) {
+          standardEventHandler({'event': 'ScrollTiming', 'category': 'Scroll Depth', 'action': action, 'label': label, 'timing': timing});
+        }
+      }
+    }
 
     function calculateMarks(docHeight) {
       return {
@@ -191,19 +207,20 @@
       };
     }
 
-    function checkMarks(marks, scrollDistance) {
+    function checkMarks(marks, scrollDistance, timing) {
       // Check each active mark
       for ( var key in marks ) {
         if ( !marks.hasOwnProperty(key) )
           continue;
         var val = marks[key];
         if ( !inArray(cache, key) && scrollDistance >= val ) {
+          sendEvent('Percentage', key, scrollDistance, timing);
           cache.push(key);
         }
       }
     }
 
-    function checkElements(elements, scrollDistance) {
+    function checkElements(elements, scrollDistance, timing) {
       for ( var i=0; i<elements.length; i++) {
         var elem = elements[i];
         if ( !inArray(cache, elem) ) {
@@ -211,11 +228,17 @@
           if ( elemNode ) {
             var elemYOffset = getElementYOffsetToDocumentTop(elemNode);
             if ( scrollDistance >= elemYOffset ) {
+              sendEvent('Elements', elem, scrollDistance, timing);
               cache.push(elem);
             }
           }
         }
       }
+    }
+
+    function rounded(scrollDistance) {
+      // Returns String
+      return (Math.floor(scrollDistance/250) * 250).toString();
     }
 
     /*
@@ -362,7 +385,7 @@
    */
 
   if ( typeof window['jQuery'] !== 'undefined' ) {
-    window['jQuery'].gascrolldepth = init;
+    window['jQuery'].scrolldepth = init;
   }
 
 })( window, document );
