@@ -373,12 +373,13 @@
    * Globals
    */
 
-  window.scrolldepth = {
+  var scrolldepth = {
     init: init,
     reset: reset,
     addElements: addElements,
     removeElements: removeElements
   };
+  window.scrolldepth = scrolldepth;
 
   /*
    * jQuery Plugin
@@ -388,4 +389,7 @@
     window['jQuery'].scrolldepth = init;
   }
 
+  if (typeof module == 'object' && module.exports) {
+    module.exports = scrolldepth;
+  }
 })( window, document );
